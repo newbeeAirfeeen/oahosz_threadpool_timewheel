@@ -25,7 +25,8 @@ Timer::Timer() :p_thread{nullptr},
 
 Timer::	~Timer()
 {
-	cancel();
+	if(!stopping.load())
+		cancel();
 }
 
 

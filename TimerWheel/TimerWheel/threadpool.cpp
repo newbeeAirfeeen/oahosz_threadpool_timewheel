@@ -24,18 +24,23 @@
 
 oaho::task::task() 
 {
-	taskptr = std::make_shared<PerviousAfterTask>();
+	//taskptr = std::make_shared<PerviousAfterTask>();
 }
 oaho::task::task(const task& other) 
 {
-
-	this->taskptr = other.taskptr;
+	this->ExcuteTime = other.ExcuteTime;
+	this->isloop = other.isloop;
+	//this->taskptr = other.taskptr;
+	this->taskid = other.taskid;
 	setFunc(const_cast<task&>(other).func);
 }
 oaho::task::task(task&& t) noexcept
 {
+	this->ExcuteTime = t.ExcuteTime;
+	this->isloop = t.isloop;
 	this->func = std::move(t.func);
 	this->taskid = t.taskid;
+	//this->taskptr = t.taskptr;
 	t.taskid = -1;
 }
 unsigned long long oaho::task::getFuncId() const
@@ -48,12 +53,12 @@ bool oaho::task::operator == (const oaho::task& other)
 }
 oaho::ReturnType oaho::task::operator()()
 {
-	bool fsa = this->taskptr->is_set_previous();
-	if (this->taskptr->is_set_previous())
-		taskptr->runPrevious();
+	/*bool fsa = this->taskptr->is_set_previous();
+	if (this->taskptr != nullptr && this->taskptr->is_set_previous())
+		taskptr->runPrevious();*/
 	this->func();
-	if (this->taskptr->is_set_after())
-		taskptr->runAfterTask();
+	/*if (this->taskptr != nullptr && this->taskptr->is_set_after())
+		taskptr->runAfterTask();*/
 }
 oaho::task& oaho::task::operator = (const task& other)
 {
@@ -61,7 +66,7 @@ oaho::task& oaho::task::operator = (const task& other)
 	{
 		return *this;
 	}
-	this->taskptr = other.taskptr;
+	//this->taskptr = other.taskptr;
 	setFunc(const_cast<task&>(other).func);
 	return *this;
 }
@@ -81,7 +86,7 @@ oaho::threadpool::threadpool(unsigned int poolsize) :thread_use_couple{0},
 	/*
 	   线程的运行方式： 线程在等待，此时被通知要求退出等待，并且销毁。此时任务池里应该是没有任务
 	*/
-	for (int i = 0; i < poolsize; ++i)
+	for (unsigned int i = 0; i < poolsize; ++i)
 	{
 		pool.emplace_back(
 			std::make_shared<std::thread>([this] {

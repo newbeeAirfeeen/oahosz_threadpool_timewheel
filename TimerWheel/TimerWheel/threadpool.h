@@ -5,8 +5,9 @@
 	FileName    : threadpool.h
 	tip		    : implements a simple thread pool.
 	version	    : 2.4
-
 	author      : oaho
+
+
 	date	    : 2020-11-22
 	desciprtion : progess flow: user define a variable with threadpool, threadpool could initialize ifself.
 				  it initialize itself with 20 couple of thread, you could revise it by youself.after completed.
@@ -35,53 +36,56 @@ namespace oaho
 	using std::default_random_engine;
 
 
-	class PerviousAfterTask
-	{
-	public:
-		PerviousAfterTask() {}
-		inline bool is_set_previous() { return _is_set_previos; }
-		inline bool is_set_after() { return _is_set_after; }
-		template<typename T, typename...Args>
-		inline int setPerviousTask(T&& t, Args&&... args)
-		{
-			this->_PreviousTask = std::bind(
-				std::forward<T>(t),
-				std::forward<Args>(args)...);
-			this->_is_set_previos = true;
-			return 0;
-		}
-		template<typename T, typename...Args>
-		inline int setAfterTask(T&& t, Args&&... args)
-		{
-			this->_AfterTask = std::bind(
-				std::forward<T>(t),
-				std::forward<Args>(args)...);
-			this->_is_set_after = true;
-			return 0;
-		}
-		inline int runPrevious()
-		{
-			_PreviousTask();
-			return 0;
-		}
-		inline int runAfterTask()
-		{
-			_AfterTask();
-			return 0;
-		}										//ater
-	private:
-		bool						_is_set_previos{ false };
-		bool						_is_set_after{ false };
-		std::function<ReturnType()> _PreviousTask{nullptr};
-		std::function<ReturnType()> _AfterTask{nullptr};
-	};
+	//class PerviousAfterTask
+	//{
+	//public:
+	//	PerviousAfterTask() {}
+	//	inline bool is_set_previous() { return _is_set_previos; }
+	//	inline bool is_set_after() { return _is_set_after; }
+	//	template<typename T, typename...Args>
+	//	inline int setPerviousTask(T&& t, Args&&... args)
+	//	{
+	//		this->_PreviousTask = std::bind(
+	//			std::forward<T>(t),
+	//			std::forward<Args>(args)...);
+	//		this->_is_set_previos = true;
+	//		return 0;
+	//	}
+	//	template<typename T, typename...Args>
+	//	inline int setAfterTask(T&& t, Args&&... args)
+	//	{
+	//		this->_AfterTask = std::bind(
+	//			std::forward<T>(t),
+	//			std::forward<Args>(args)...);
+	//		this->_is_set_after = true;
+	//		return 0;
+	//	}
+	//	inline int runPrevious()
+	//	{
+	//		_PreviousTask();
+	//		return 0;
+	//	}
+	//	inline int runAfterTask()
+	//	{
+	//		_AfterTask();
+	//		return 0;
+	//	}										//ater
+	//private:
+	//	bool						_is_set_previos{ false };
+	//	bool						_is_set_after{ false };
+	//	std::function<ReturnType()> _PreviousTask{nullptr};
+	//	std::function<ReturnType()> _AfterTask{nullptr};
+	//};
 
 
 	using Task = class task{
 	public:
 		task();
+
 		task(const task& other);
+
 		task(task&&) noexcept;
+
 		template<typename T, typename...Args>
 		inline void setFunc(T&& tt, Args&&... args)
 		{
@@ -95,25 +99,47 @@ namespace oaho
 				std::forward<T>(tt), std::forward<Args>(args)...);
 			this->func = std::move(func_cmit);
 		}
-		template<typename T, typename...Args>
-		inline void setPreviousTask(T&& tt, Args&&... args)									    //previous task
+
+		//template<typename T, typename...Args>
+		//inline void setPreviousTask(T&& tt, Args&&... args)									    //previous task
+		//{
+		//	this->taskptr->setPerviousTask(std::forward<T>(tt), std::forward<Args>(args)...);
+		//}
+
+		//template<typename T, typename...Args>
+
+		//inline void setAfterTask(T&& tt, Args&&... args)										//after task
+		//{
+		//	this->taskptr->setAfterTask(std::forward<T>(tt), std::forward<Args>(args)...);
+		//}
+
+		unsigned long long getFuncId() const;				//get task id
+
+		inline void setloop(bool loop) { this->isloop = loop; }
+		inline bool _isloop() { return isloop; }
+
+		inline void setExcuteTime(unsigned long long time)
 		{
-			this->taskptr->setPerviousTask(std::forward<T>(tt), std::forward<Args>(args)...);
+			this->ExcuteTime = time;
 		}
-		template<typename T, typename...Args>
-		inline void setAfterTask(T&& tt, Args&&... args)										//after task
+
+		inline unsigned long long getExcuteTime() 
 		{
-			this->taskptr->setAfterTask(std::forward<T>(tt), std::forward<Args>(args)...);
+			return this->ExcuteTime;
 		}
-		unsigned long long getFuncId() const;													//get task id
+
 		bool operator == (const task& other);
+
 		task& operator = (const task& other);
+
 		ReturnType operator()();
 
 	protected:
-		std::function<ReturnType()>				func{nullptr};									//excute function
-		unsigned long long 						taskid{ (unsigned long long) - 1 };				//taskid
-		std::shared_ptr<PerviousAfterTask>		taskptr{ nullptr };
+		std::function<ReturnType()>				func{nullptr};									// excute function
+		unsigned long long 						taskid{ (unsigned long long) - 1 };				// taskid
+		unsigned long long						ExcuteTime;										/* 执行的时间 */
+		//std::shared_ptr<PerviousAfterTask>		taskptr{ nullptr };
+		bool									isloop{false};									/* 是否循环执行 */
 	};
 
 	class threadpool 
@@ -121,7 +147,7 @@ namespace oaho
 	public:
 		threadpool( unsigned int poolsize = 10 );
 		~threadpool();
-		inline void commit(oaho::Task& ttt)
+		inline void commit(oaho::Task ttt)
 		{
 			if (isStopped.load())
 				throw std::runtime_error("thread pool is notified stopping!!");
@@ -135,7 +161,7 @@ namespace oaho
 
 			std::unique_lock<std::mutex> mtx_lock{ Mutex };
 			//add task
-			this->task_que.emplace_back(ttt);
+			this->task_que.emplace_back(std::move(ttt));
 			//notify a thread excute
 			excuteTask.store(true);
 			cv.notify_one();

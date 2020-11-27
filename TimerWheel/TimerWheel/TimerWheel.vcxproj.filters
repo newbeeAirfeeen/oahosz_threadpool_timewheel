@@ -21,6 +21,9 @@
     <ClInclude Include="threadpool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="TimeWheel.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Timer.cpp">
@@ -30,6 +33,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="threadpool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeWheel.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

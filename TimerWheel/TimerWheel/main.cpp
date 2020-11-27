@@ -1,12 +1,11 @@
-#include"Timer.h"
 #include<iostream>
 #include<ratio>
 #include<chrono>
 #include <functional>
-#include"threadpool.h"
+#include"TimeWheel.h"
 using namespace std;
 
-
+std::mutex mt;
 void print2()
 {
 	std::this_thread::sleep_for(std::chrono::seconds{ 2 });
@@ -20,6 +19,7 @@ void print3()
 }
 void print4(int i)
 {
+
 	std::this_thread::sleep_for(std::chrono::seconds{ 1 });
 	cout << i << "  shen,world" << endl;
 }
@@ -40,18 +40,32 @@ int main()
 	
 
 
-	oaho::Task t;
+	/*oaho::Task t;
 	t.setPreviousTask(print4, 5);
-	//t.setAfterTask(&A::print, 456);
+	t.setAfterTask(print4, 45674);
 	t.setFunc(print2);
 	
 
 
 
 	oaho::threadpool pool;
-	pool.commit(t);
+	pool.commit(t);*/
 
 
+	/*std::vector<int> vec;
+	vec.resize(61);
+	cout << vec.size() << endl;*/
+
+
+	SecondsTimeWheel st;
+	oaho::Task t;
+	t.setFunc([] {
+		std::cout << "Hello,world " << std::endl;
+	});
+	st.run();
+	st.addTask(t, 3, false);
+
+	cin.get();
 
 
 	return 0;
