@@ -36,6 +36,7 @@
 class TimeWheel 
 {
 public:
+	TimeWheel():mtx_lock{ mtx, std::defer_lock } {}
 	virtual ~TimeWheel() {}
 	virtual void addTask(oaho::Task t, unsigned int position, bool loop) = 0;			/* 添加任务 */
 	virtual void run() = 0;																/* 转动刻度 */
@@ -47,10 +48,12 @@ protected:
 	std::atomic<bool>									completed;						/* 是否初步完成初始化 */
 	unsigned int										max_quarter;					/* 最大刻度 */
 	std::mutex											notify_init;					/* 初步初始化完成的通知 */
+	std::mutex											mtx;
 	std::condition_variable								cv_notify;
 	std::shared_ptr<Timer>								timer;							/* 定时拨动刻度 */
 	oaho::threadpool									excutePool{ 50 };				/* 执行任务的线程池 */
-		
+	oaho::threadpool									notify_pool{ 10 };
+	std::unique_lock<std::mutex>						mtx_lock;
 	//std::recursive_mutex          						recursive_lock;
 };
 
@@ -71,7 +74,7 @@ public:
 class SecondsTimeWheel:public TimeWheel                             /* 秒轮 */
 {																	/* 每一秒移动一个刻度,到60刻度的时候归0.在通知分轮去转 */
 public:
-	SecondsTimeWheel( unsigned int quarter = 61 );
+	SecondsTimeWheel();
 	~SecondsTimeWheel();
 	
 

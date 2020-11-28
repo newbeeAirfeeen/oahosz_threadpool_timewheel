@@ -23,7 +23,11 @@ std::mutex mutex;
 //###################### MinuteTimeWheel #####################
 MinutesTimeWheel::MinutesTimeWheel()
 {
-
+	max_quarter = 60;
+	timeWheel = std::make_shared<HoursTimeWheel>();
+	quarter_task.resize(max_quarter + 1);							    /* 调整一个轮的最大刻度 */
+	quarter_pointer = 0;
+	completed = false;
 }
 MinutesTimeWheel::~MinutesTimeWheel()
 {
@@ -36,18 +40,25 @@ void MinutesTimeWheel::addTask(oaho::Task t, unsigned int position, bool loop)
 
 void MinutesTimeWheel::run()
 {
-
+	this->quarter_pointer++;
+	if (quarter_pointer == max_quarter)
+	{
+		quarter_pointer = 0;
+		timeWheel->run();
+	}
+	//这里需要降级任务
 }
 
 
 //######################  SecondsTimeWheel ####################
-SecondsTimeWheel::SecondsTimeWheel(unsigned int quarter)
+SecondsTimeWheel::SecondsTimeWheel():TimeWheel()
 {
-	max_quarter = quarter;
+	max_quarter = 60;
 	timeWheel = std::make_shared<MinutesTimeWheel>();			/* 下一个指针是分轮 */
-	quarter_task.resize(quarter);							    /* 调整一个轮的最大刻度 */
+	quarter_task.resize(max_quarter + 1);							    /* 调整一个轮的最大刻度 */
 	quarter_pointer = 0;
 	completed = false;
+	
 }
 SecondsTimeWheel::~SecondsTimeWheel()
 {
@@ -64,10 +75,10 @@ void SecondsTimeWheel::addTask(oaho::Task t, unsigned int position, bool loop)
 		return;
 	}
 	/* 同步添加任务 */
-	std::unique_lock < std::mutex> mtx_lock{ mutex };
+	mtx_lock.lock();
 	int poi = (position + quarter_pointer) % max_quarter;
-	std::cout << poi << std::endl;
 	quarter_task[poi].emplace_back(std::move(t));		/* 当前刻度 + 指定刻度 */
+	mtx_lock.unlock();
 }
 void SecondsTimeWheel::run()
 {
@@ -84,30 +95,28 @@ void SecondsTimeWheel::run()
 			}
 			quarter_pointer++;
 
-			//std::cout << "seconds: " << quarter_pointer.load() << std::endl;
-
 			/*如果到60刻度，置为0，通知高层时间轮转动*/
-			if (quarter_pointer.load() == 60)
+			if (quarter_pointer.load() == max_quarter)
 			{
 				quarter_pointer = 0;
 				timeWheel->run();
 			}
 			/*通知线程池处理当前刻度的任务*/
-			mutex.lock();
+			mtx_lock.lock();
 			int value = quarter_pointer;
-			oaho::Task tt;
+			oaho::Task t;
 			while (!quarter_task[value].empty())
 			{
-				oaho::Task t = quarter_task[value].front();
-				if (t._isloop())
-				{
-					addTask(t, t.getExcuteTime() , true);
-				}
+				t = quarter_task[value].front();
 				excutePool.commit(t); 
 				quarter_task[value].pop_front();
 			}
 			quarter_task[value].clear();
-			mutex.unlock();
+			mtx_lock.unlock();
+			if (t._isloop())
+			{
+				addTask(t, t.getExcuteTime(), true);
+			}
 		}, span
 	);
 	std::unique_lock<std::mutex> mtx_lock{ notify_init };

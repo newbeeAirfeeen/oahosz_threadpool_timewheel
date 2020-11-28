@@ -139,12 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="list.h" />
+    <ClInclude Include="Pointer.h" />
+    <ClInclude Include="ScheduleTask.h" />
+    <ClInclude Include="Task.h" />
     <ClInclude Include="threadpool.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TimeWheel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pointer.cpp" />
+    <ClCompile Include="ScheduleTask.cpp" />
+    <ClCompile Include="task.cpp" />
     <ClCompile Include="threadpool.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimeWheel.cpp" />

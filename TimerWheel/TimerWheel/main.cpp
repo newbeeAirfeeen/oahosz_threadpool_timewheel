@@ -37,24 +37,6 @@ int main()
 	//定时器部分
 	using msecond = std::chrono::duration<int, std::milli>;
 	using secondtype = std::chrono::duration<int>;
-	
-
-
-	/*oaho::Task t;
-	t.setPreviousTask(print4, 5);
-	t.setAfterTask(print4, 45674);
-	t.setFunc(print2);
-	
-
-
-
-	oaho::threadpool pool;
-	pool.commit(t);*/
-
-
-	/*std::vector<int> vec;
-	vec.resize(61);
-	cout << vec.size() << endl;*/
 
 
 	SecondsTimeWheel st;
@@ -63,7 +45,7 @@ int main()
 		std::cout << "Hello,world " << std::endl;
 	});
 	st.run();
-	st.addTask(t, 3, false);
+	st.addTask(t, 3, true);
 
 	cin.get();
 

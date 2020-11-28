@@ -1,2 +1,36 @@
 ﻿  main.cpp
-  TimerWheel.vcxproj -> D:\development\git_local_hub\TimerWheel\Debug\TimerWheel.exe
+  Pointer.cpp
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\Pointer.h(9,9): error C2397: 从“unsigned int”转换到“int”需要收缩转换
+  ScheduleTask.cpp
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\Task.h(14,26): error C2011: “oaho::task”:“class”类型重定义
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\threadpool.h(81): message : 参见“oaho::task”的声明
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\Task.h(59,3): error C2059: 语法错误:“;”
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\ScheduleTask.cpp(34,23): error C2027: 使用了未定义类型“oaho::task”
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\threadpool.h(81): message : 参见“oaho::task”的声明
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\ScheduleTask.cpp(35,1): error C2027: 使用了未定义类型“oaho::task”
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\threadpool.h(81): message : 参见“oaho::task”的声明
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\ScheduleTask.cpp(41,23): error C2227: “->run”的左边必须指向类/结构/联合/泛型类型
+  task.cpp
+  threadpool.cpp
+  Timer.cpp
+  TimeWheel.cpp
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\TimeWheel.cpp(118,31): warning C4244: “参数”: 从“unsigned __int64”转换到“unsigned int”，可能丢失数据
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xmemory(2007,9): error C2259: “HoursTimeWheel”: 无法实例化抽象类
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\TimeWheel.h(60): message : 参见“HoursTimeWheel”的声明
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xmemory(2007,9): message : 由于下列成员:
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xmemory(2007,9): message : “void TimeWheel::addTask(oaho::Task,unsigned int,bool)”: 是抽象的
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\TimeWheel.h(41): message : 参见“TimeWheel::addTask”的声明
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\xmemory(2007,9): message : “void TimeWheel::run(void)”: 是抽象的
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\TimeWheel.h(42): message : 参见“TimeWheel::run”的声明
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(1576): message : 查看对正在编译的 类 模板 实例化“std::_Wrap<_Ty>”的引用
+          with
+          [
+              _Ty=HoursTimeWheel
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.28.29333\include\memory(2207): message : 查看对正在编译的 类 模板 实例化“std::_Ref_count_obj2<_Ty>”的引用
+          with
+          [
+              _Ty=HoursTimeWheel
+          ]
+D:\development\workStation\gitworkstation\vs\TimeWheel\TimerWheel\TimerWheel\TimeWheel.cpp(27): message : 查看对正在编译的函数 模板 实例化“std::shared_ptr<HoursTimeWheel> std::make_shared<HoursTimeWheel,>(void)”的引用
+  正在生成代码...

@@ -66,7 +66,10 @@ oaho::task& oaho::task::operator = (const task& other)
 	{
 		return *this;
 	}
-	//this->taskptr = other.taskptr;
+	this->ExcuteTime = other.ExcuteTime;
+	this->isloop = other.isloop;
+	this->func = std::move(other.func);
+	this->taskid = other.taskid;
 	setFunc(const_cast<task&>(other).func);
 	return *this;
 }
